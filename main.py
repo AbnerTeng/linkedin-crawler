@@ -2,7 +2,6 @@
 from dyna_crawl_setup import init_setup
 from utils import elements, count_jobs, get_job_lst, get_job_infos, to_df
 from argparse import ArgumentParser
-from merge_df import get_full_df
 from lang_proc import process_text, clean_lst, wc
 
 parser = ArgumentParser()
@@ -11,7 +10,7 @@ parser.add_argument('-loc', '-location', type = str, default = "Taipei%20City%2C
 parser.add_argument('-type', '-type', type = str, default = " ", help = "Type of the job, ex: Part-time, Full-time, intern, etc.")
 parser.add_argument('-path1', '-path1', type = str, default = "job_df.csv", help = "Path to save the job_df.csv")
 parser.add_argument('-path2', '-path2', type = str, default = "descrip_df.csv", help = "Path to save the descrip_df.csv")
-parser.add_argument('-path3', '-path3', type = str, default = "big_df.csv", help = "Path to save the big_df.csv")
+parser.add_argument('-wc', '-wordcloud', type = bool, default = False, help = "Whether to show the wordcloud")
 args = parser.parse_args()
 
 def main():
@@ -24,10 +23,13 @@ def main():
     jobs = get_job_lst(driver)
     job_title_lst, job_comp_lst, job_descrip = get_job_infos(jobs, driver)
     to_df(job_title_lst, job_comp_lst, job_descrip, args.path1, args.path2)
-    ## get_full_df(args.path3)
     descrip_lst = process_text(args.path2)
     clean_lst_2 = clean_lst(descrip_lst)
-    wc(clean_lst_2)
+
+    if args.wc is True:
+        wc(clean_lst_2)
+    else:
+        pass
 
 if __name__ == "__main__":
     main()
